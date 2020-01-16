@@ -17,7 +17,7 @@ def get_buffer_data(buffer, bint check_writable=False):
     Returns data pointer of the buffer. Raising ValueError if the buffer
     is read only and check_writable=True is set.
     """
-    iface = None
+    cdef dict iface = None
     if hasattr(buffer, "__cuda_array_interface__"):
         iface = buffer.__cuda_array_interface__
     elif hasattr(buffer, "__array_interface__"):
