@@ -12,7 +12,7 @@ from core_dep cimport *
 from ..exceptions import UCXError, UCXCloseError
 
 
-def get_buffer_data(buffer, check_writable=False):
+def get_buffer_data(buffer, bint check_writable=False):
     """
     Returns data pointer of the buffer. Raising ValueError if the buffer
     is read only and check_writable=True is set.
