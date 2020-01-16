@@ -25,15 +25,14 @@ def get_buffer_data(buffer, check_writable=False):
 
     if iface is not None:
         data_ptr, data_readonly = iface['data']
+        # Workaround for numba giving None, rather than an 0.
+        # https://github.com/cupy/cupy/issues/2104 for more info.
+        if data_ptr is None:
+            data_ptr = 0
     else:
         mview = memoryview(buffer)
         data_ptr = int(<uintptr_t>PyMemoryView_GET_BUFFER(mview).buf)
         data_readonly = mview.readonly
-
-    # Workaround for numba giving None, rather than an 0.
-    # https://github.com/cupy/cupy/issues/2104 for more info.
-    if data_ptr is None:
-        data_ptr = 0
 
     if data_ptr == 0:
         raise NotImplementedError("zero-sized buffers isn't supported")
