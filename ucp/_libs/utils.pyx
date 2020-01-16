@@ -23,6 +23,7 @@ def get_buffer_data(buffer, bint check_writable=False):
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
+    cdef bint data_readonly
     if iface is not None:
         data_ptr, data_readonly = iface['data']
         # Workaround for numba giving None, rather than an 0.
@@ -32,7 +33,7 @@ def get_buffer_data(buffer, bint check_writable=False):
     else:
         mview = memoryview(buffer)
         data_ptr = int(<uintptr_t>PyMemoryView_GET_BUFFER(mview).buf)
-        data_readonly = mview.readonly
+        data_readonly = <bint>mview.readonly
 
     if data_ptr == 0:
         raise NotImplementedError("zero-sized buffers isn't supported")
