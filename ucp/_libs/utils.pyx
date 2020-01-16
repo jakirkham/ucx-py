@@ -65,6 +65,7 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
         iface = buffer.__array_interface__
 
     cdef size_t itemsize
+    cdef size_t nbytes
     if iface is not None:
         import numpy
         itemsize = numpy.dtype(iface['typestr']).itemsize
