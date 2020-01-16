@@ -64,9 +64,10 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
+    cdef size_t itemsize
     if iface is not None:
         import numpy
-        itemsize = int(numpy.dtype(iface['typestr']).itemsize)
+        itemsize = numpy.dtype(iface['typestr']).itemsize
         # Making sure that the elements in shape is integers
         shape = [int(s) for s in iface['shape']]
         nbytes = reduce(operator.mul, shape, 1) * itemsize
