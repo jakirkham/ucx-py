@@ -23,16 +23,19 @@ def get_buffer_data(buffer, bint check_writable=False):
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
+    cdef uintptr_t data_ptr
     cdef bint data_readonly
     if iface is not None:
-        data_ptr, data_readonly = iface['data']
+        data_ptr_obj, data_readonly = iface['data']
         # Workaround for numba giving None, rather than an 0.
         # https://github.com/cupy/cupy/issues/2104 for more info.
-        if data_ptr is None:
+        if data_ptr_obj is None:
             data_ptr = 0
+        else:
+            data_ptr = <uintptr_t>data_ptr_obj
     else:
         mview = memoryview(buffer)
-        data_ptr = int(<uintptr_t>PyMemoryView_GET_BUFFER(mview).buf)
+        data_ptr = <uintptr_t>PyMemoryView_GET_BUFFER(mview).buf
         data_readonly = <bint>mview.readonly
 
     if data_ptr == 0:
