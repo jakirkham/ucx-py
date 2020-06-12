@@ -78,8 +78,7 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
         for i in range(len(shape)):
             nbytes *= shape[i]
         # Check that data is contiguous
-        if len(shape) > 0 and iface.get("strides", None) is not None:
-            strides = [int(s) for s in iface['strides']]
+        if len(shape) > 0 and strides is not None:
             if len(strides) != len(shape):
                 msg = "The length of shape and strides must be equal"
                 raise ValueError(msg)
