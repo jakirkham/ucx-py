@@ -4,7 +4,7 @@
 
 import asyncio
 import uuid
-from libc.stdint cimport uintptr_t, uint64_t
+from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from core_dep cimport *
 from ..exceptions import UCXError, UCXCloseError
@@ -63,6 +63,7 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
         iface = buffer.__array_interface__
 
     cdef size_t i
+    cdef int64_t s
     cdef size_t itemsize
     cdef uint64_t[::1] shape
     cdef int64_t[::1] strides
@@ -83,11 +84,11 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
                     raise ValueError(
                         "The length of shape and strides must be equal"
                     )
-                s = itemsize
-                for i in reversed(range(len(shape))):
+                s = <int64_t>itemsize
+                for i from len(shape) >= i >= 0 by 1:
                     if s != strides[i]:
                         raise ValueError("Array must be contiguous")
-                    s *= shape[i]
+                    s *= <int64_t>shape[i]
         if iface.get("mask", None) is not None:
             raise NotImplementedError("mask attribute not supported")
     else:
