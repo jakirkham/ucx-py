@@ -22,7 +22,7 @@ def get_buffer_data(buffer, bint check_writable=False):
     cdef uintptr_t data_ptr
     cdef bint data_readonly
     if iface is not None:
-        data_ptr_obj, data_readonly = iface['data']
+        data_ptr_obj, data_readonly = iface["data"]
         # Workaround for numba giving None, rather than an 0.
         # https://github.com/cupy/cupy/issues/2104 for more info.
         if data_ptr_obj is None:
@@ -69,15 +69,15 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
     cdef size_t nbytes
     if iface is not None:
         import numpy
-        itemsize = numpy.dtype(iface['typestr']).itemsize
+        itemsize = numpy.dtype(iface["typestr"]).itemsize
         # Making sure that the elements in shape is integers
-        shape = numpy.array(iface['shape'], dtype=numpy.uint64)
+        shape = numpy.array(iface["shape"], dtype=numpy.uint64)
         nbytes = itemsize
         for i in range(len(shape)):
             nbytes *= shape[i]
         # Check that data is contiguous
-        if iface['strides'] is not None:
-            strides = numpy.array(iface['strides'], dtype=numpy.int64)
+        if iface["strides"] is not None:
+            strides = numpy.array(iface["strides"], dtype=numpy.int64)
             if len(shape) > 0:
                 if len(strides) != len(shape):
                     raise ValueError(
