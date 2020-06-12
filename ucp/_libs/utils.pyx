@@ -89,7 +89,7 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
                     if s != strides[i]:
                         raise ValueError("Array must be contiguous")
                     s *= <int64_t>shape[i]
-        if iface.get("mask", None) is not None:
+        if "mask" in iface:
             raise NotImplementedError("mask attribute not supported")
     else:
         mview = memoryview(buffer)
