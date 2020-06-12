@@ -51,7 +51,7 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, cuda_support):
     if `check_min_size` is greater than the size of the buffer
     """
 
-    iface = None
+    cdef dict iface = None
     if hasattr(buffer, "__cuda_array_interface__"):
         iface = buffer.__cuda_array_interface__
         if not cuda_support:
