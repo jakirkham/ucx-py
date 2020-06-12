@@ -6,7 +6,7 @@ import asyncio
 import uuid
 from functools import reduce
 import operator
-from libc.stdint cimport uintptr_t
+from libc.stdint cimport uintptr_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from core_dep cimport *
 from ..exceptions import UCXError, UCXCloseError
@@ -65,12 +65,13 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
         iface = buffer.__array_interface__
 
     cdef size_t itemsize
+    cdef uint64_t[::1] shape
     cdef size_t nbytes
     if iface is not None:
         import numpy
         itemsize = numpy.dtype(iface['typestr']).itemsize
         # Making sure that the elements in shape is integers
-        shape = [int(s) for s in iface['shape']]
+        shape = numpy.array(iface['shape'], dtype=numpy.uint64)
         nbytes = reduce(operator.mul, shape, 1) * itemsize
         # Check that data is contiguous
         if len(shape) > 0 and iface.get("strides", None) is not None:
