@@ -78,16 +78,16 @@ def get_buffer_nbytes(buffer, check_min_size, cuda_support):
         # Check that data is contiguous
         if iface['strides'] is not None:
             strides = numpy.array(iface['strides'], dtype=numpy.int64)
-        if len(shape) > 0 and strides is not None:
-            if len(strides) != len(shape):
-                raise ValueError(
-                    "The length of shape and strides must be equal"
-                )
-            s = itemsize
-            for i in reversed(range(len(shape))):
-                if s != strides[i]:
-                    raise ValueError("Array must be contiguous")
-                s *= shape[i]
+            if len(shape) > 0:
+                if len(strides) != len(shape):
+                    raise ValueError(
+                        "The length of shape and strides must be equal"
+                    )
+                s = itemsize
+                for i in reversed(range(len(shape))):
+                    if s != strides[i]:
+                        raise ValueError("Array must be contiguous")
+                    s *= shape[i]
         if iface.get("mask", None) is not None:
             raise NotImplementedError("mask attribute not supported")
     else:
