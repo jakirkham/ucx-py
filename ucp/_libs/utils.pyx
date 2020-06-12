@@ -55,10 +55,11 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, cuda_support):
     if hasattr(buffer, "__cuda_array_interface__"):
         iface = buffer.__cuda_array_interface__
         if not cuda_support:
-            msg = "UCX is not configured with CUDA support, please add " \
-                  "`cuda_copy` and/or `cuda_ipc` to " \
-                  "the UCX_TLS environment variable"
-            raise ValueError(msg)
+            raise ValueError(
+                "UCX is not configured with CUDA support, please add "
+                "`cuda_copy` and/or `cuda_ipc` to "
+                "the UCX_TLS environment variable"
+            )
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
