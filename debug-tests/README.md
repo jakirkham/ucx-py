@@ -1,6 +1,8 @@
 ## Debug Tests
 
-Files in this directory are useful for debugging purposes and often require being executed in two separate sessions (tmux/ssh/etc)
+Files in this directory are useful for debugging purposes and often require being executed in two separate sessions (tmux/ssh/etc).
+
+NOTE: This was moved outside of the tests directory to prevent users running potentially unstable tests by accident.
 
 
 ## Send/Recv
@@ -18,3 +20,10 @@ Files in this directory are useful for debugging purposes and often require bein
 `nvprof` is used to verify NVLINK usage and we are looking at two things primarily:
 - existence of [CUDA memcpy PtoP]
 - balanced cudaMalloc/cudaFree
+
+### Multi-worker Setup
+This setup is particularly useful for IB testing when `multi-node-workers.sh`
+is placed in a NFS mount and can be executed independently on each machine
+
+- bash scheduler.sh
+- bash multi-node-workers.sh

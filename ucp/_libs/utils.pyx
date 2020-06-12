@@ -3,10 +3,8 @@
 # cython: language_level=3
 
 import asyncio
-import uuid
 from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
-from core_dep cimport *
 from ..exceptions import UCXError, UCXCloseError
 
 
