@@ -45,7 +45,7 @@ def get_buffer_data(buffer, bint check_writable=False):
     return data_ptr
 
 
-def get_buffer_nbytes(buffer, check_min_size, cuda_support):
+cpdef size_t get_buffer_nbytes(buffer, check_min_size, cuda_support):
     """
     Returns the size of the buffer in bytes. Returns ValueError
     if `check_min_size` is greater than the size of the buffer
