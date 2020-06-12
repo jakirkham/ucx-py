@@ -2,7 +2,6 @@
 # See file LICENSE for terms.
 # cython: language_level=3
 
-import asyncio
 from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from ..exceptions import UCXError, UCXCloseError
