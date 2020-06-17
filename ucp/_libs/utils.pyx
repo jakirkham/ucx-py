@@ -83,7 +83,7 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
                         "The length of shape and strides must be equal"
                     )
                 s = <int64_t>itemsize
-                for i from len(shape) >= i >= 0 by 1:
+                for i from len(shape) > i >= 0 by 1:
                     if s != strides[i]:
                         raise ValueError("Array must be contiguous")
                     s *= <int64_t>shape[i]
