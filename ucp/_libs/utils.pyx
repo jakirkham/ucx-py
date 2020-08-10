@@ -10,7 +10,7 @@ from array import array
 from ..exceptions import UCXCloseError, UCXError
 
 
-def get_buffer_data(buffer, bint check_writable=False):
+cpdef uintptr_t get_buffer_data(buffer, bint check_writable=False) except *:
     """
     Returns data pointer of the buffer. Raising ValueError if the buffer
     is read only and check_writable=True is set.
