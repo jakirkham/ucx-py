@@ -6,6 +6,7 @@ from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from libc.stdint cimport uintptr_t
 
+from array import array
 from ..exceptions import UCXCloseError, UCXError
 
 
@@ -75,13 +76,13 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
         import numpy
         itemsize = numpy.dtype(iface["typestr"]).itemsize
         # Making sure that the elements in shape is integers
-        shape = numpy.array(iface["shape"], dtype=numpy.uint64)
+        shape = array("L", iface["shape"])
         nbytes = itemsize
         for i in range(len(shape)):
             nbytes *= shape[i]
         # Check that data is contiguous
         if iface["strides"] is not None:
-            strides = numpy.array(iface["strides"], dtype=numpy.int64)
+            strides = array("l", iface["strides"])
             if len(shape) > 0:
                 if len(strides) != len(shape):
                     raise ValueError(
