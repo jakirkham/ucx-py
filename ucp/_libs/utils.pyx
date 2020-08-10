@@ -2,13 +2,14 @@
 # See file LICENSE for terms.
 # cython: language_level=3
 
-cimport cython
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from libc.stdint cimport int64_t, uint64_t, uintptr_t
 
 from array import array
 
 from ..exceptions import UCXCloseError, UCXError
+
+cimport cython
 
 
 cpdef uintptr_t get_buffer_data(buffer, bint check_writable=False) except *:
