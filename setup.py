@@ -32,7 +32,7 @@ ext_modules = [
     Extension(
         "ucp._libs.ucx_api",
         sources=["ucp/_libs/ucx_api.pyx", "ucp/_libs/src/c_util.c"],
-        depends=["ucp/_libs/src/c_util.h", "ucp/_libs/ucx_api_dep.pxd"],
+        depends=["ucp/_libs/src/c_util.h", "ucp/_libs/ucx_api_dep.pxd", "ucp/_libs/utils.pxd"],
         include_dirs=include_dirs,
         library_dirs=library_dirs,
         libraries=libraries,
