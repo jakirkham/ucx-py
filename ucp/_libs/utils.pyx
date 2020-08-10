@@ -74,6 +74,7 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support) except
     cdef size_t i
     cdef int64_t s
     cdef size_t itemsize
+    cdef size_t ndim
     cdef uint64_t[::1] shape
     cdef int64_t[::1] strides
     cdef size_t nbytes
@@ -82,19 +83,20 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support) except
         itemsize = numpy.dtype(iface["typestr"]).itemsize
         # Making sure that the elements in shape is integers
         shape = array("L", iface["shape"])
+        ndim = len(shape)
         nbytes = itemsize
-        for i in range(len(shape)):
+        for i in range(ndim):
             nbytes *= shape[i]
         # Check that data is contiguous
         if iface["strides"] is not None:
             strides = array("l", iface["strides"])
-            if len(shape) > 0:
-                if len(strides) != len(shape):
+            if ndim > 0:
+                if len(strides) != ndim:
                     raise ValueError(
                         "The length of shape and strides must be equal"
                     )
                 s = <int64_t>itemsize
-                for i from len(shape) > i >= 0 by 1:
+                for i from ndim > i >= 0 by 1:
                     if s != strides[i]:
                         raise ValueError("Array must be contiguous")
                     s *= <int64_t>shape[i]
