@@ -4,7 +4,9 @@
 
 from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
-from ..exceptions import UCXError, UCXCloseError
+from libc.stdint cimport uintptr_t
+
+from ..exceptions import UCXCloseError, UCXError
 
 
 def get_buffer_data(buffer, bint check_writable=False):
@@ -52,11 +54,13 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
     if hasattr(buffer, "__cuda_array_interface__"):
         iface = buffer.__cuda_array_interface__
         if not cuda_support:
-            raise ValueError(
-                "UCX is not configured with CUDA support, please add "
-                "`cuda_copy` and/or `cuda_ipc` to "
-                "the UCX_TLS environment variable"
-            )
+            msg = "UCX is not configured with CUDA support, please add " \
+                  "`cuda_copy` and/or `cuda_ipc` to the UCX_TLS environment" \
+                  "variable and that the ucx-proc=*=gpu package is " \
+                  "installed. See " \
+                  "https://ucx-py.readthedocs.io/en/latest/install.html for " \
+                  "more information."
+            raise ValueError(msg)
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
