@@ -2,6 +2,7 @@
 # See file LICENSE for terms.
 # cython: language_level=3
 
+cimport cython
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
 from libc.stdint cimport int64_t, uint64_t, uintptr_t
 
@@ -45,6 +46,9 @@ cpdef uintptr_t get_buffer_data(buffer, bint check_writable=False) except *:
     return data_ptr
 
 
+@cython.boundscheck(False)
+@cython.initializedcheck(False)
+@cython.wraparound(False)
 cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support) except *:
     """
     Returns the size of the buffer in bytes. Returns ValueError
