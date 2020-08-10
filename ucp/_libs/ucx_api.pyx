@@ -22,7 +22,7 @@ from ..exceptions import (
     log_errors,
 )
 from ..utils import nvtx_annotate
-from .utils import get_buffer_data
+from .utils cimport get_buffer_data
 
 
 # Struct used as requests by UCX
