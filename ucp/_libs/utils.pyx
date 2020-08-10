@@ -2,11 +2,11 @@
 # See file LICENSE for terms.
 # cython: language_level=3
 
-from libc.stdint cimport uintptr_t, int64_t, uint64_t
 from cpython.memoryview cimport PyMemoryView_GET_BUFFER
-from libc.stdint cimport uintptr_t
+from libc.stdint cimport int64_t, uint64_t, uintptr_t
 
 from array import array
+
 from ..exceptions import UCXCloseError, UCXError
 
 
