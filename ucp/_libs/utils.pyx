@@ -54,7 +54,7 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
     if hasattr(buffer, "__cuda_array_interface__"):
         iface = buffer.__cuda_array_interface__
         if not cuda_support:
-            msg = (
+            raise ValueError(
                 "UCX is not configured with CUDA support, please add "
                 "`cuda_copy` and/or `cuda_ipc` to the UCX_TLS environment"
                 "variable and that the ucx-proc=*=gpu package is "
@@ -62,7 +62,6 @@ cpdef size_t get_buffer_nbytes(buffer, check_min_size, bint cuda_support):
                 "https://ucx-py.readthedocs.io/en/latest/install.html for "
                 "more information."
             )
-            raise ValueError(msg)
     elif hasattr(buffer, "__array_interface__"):
         iface = buffer.__array_interface__
 
