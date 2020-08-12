@@ -39,14 +39,20 @@ def server(queue, args):
 
     if args.object_type == "numpy":
         import numpy as np
+
+        sync = lambda: None
     elif args.object_type == "cupy":
         import cupy as np
 
         np.cuda.runtime.setDevice(args.server_dev)
+        sync = lambda: np.cuda.Device(args.server_dev).synchronize()
     else:
         import cupy as np
 
         import rmm
+
+        np.cuda.runtime.setDevice(args.server_dev)
+        sync = lambda: np.cuda.Device(args.server_dev).synchronize()
 
         rmm.reinitialize(
             pool_allocator=True,
@@ -54,7 +60,6 @@ def server(queue, args):
             initial_pool_size=args.rmm_init_pool_size,
             devices=[args.server_dev],
         )
-        np.cuda.runtime.setDevice(args.server_dev)
         np.cuda.set_allocator(rmm.rmm_cupy_allocator)
 
     async def run():
@@ -68,6 +73,8 @@ def server(queue, args):
                 t = np.zeros(args.n_bytes, dtype="u1")
                 for _ in range(args.n_iter):
                     msg_recv_list.append(t)
+
+            sync()
 
             assert msg_recv_list[0].nbytes == args.n_bytes
             for i in range(args.n_iter):
@@ -95,14 +102,20 @@ def client(queue, port, server_address, args):
 
     if args.object_type == "numpy":
         import numpy as np
+
+        sync = lambda: None
     elif args.object_type == "cupy":
         import cupy as np
 
         np.cuda.runtime.setDevice(args.client_dev)
+        sync = lambda: np.cuda.Device(args.server_dev).synchronize()
     else:
         import cupy as np
 
         import rmm
+
+        np.cuda.runtime.setDevice(args.client_dev)
+        sync = lambda: np.cuda.Device(args.server_dev).synchronize()
 
         rmm.reinitialize(
             pool_allocator=True,
@@ -110,7 +123,6 @@ def client(queue, port, server_address, args):
             initial_pool_size=args.rmm_init_pool_size,
             devices=[args.client_dev],
         )
-        np.cuda.runtime.setDevice(args.client_dev)
         np.cuda.set_allocator(rmm.rmm_cupy_allocator)
 
     async def run():
@@ -130,6 +142,7 @@ def client(queue, port, server_address, args):
                 msg_recv_list.append(t2)
         assert msg_send_list[0].nbytes == args.n_bytes
         assert msg_recv_list[0].nbytes == args.n_bytes
+        sync()
         if args.cuda_profile:
             np.cuda.profiler.start()
         times = []
